@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Фанатский мод для Catmaze: набор в команду">
+<meta property="og:description" content="Перерисовываем персонажей, добавляем позы, анимацию, пиксельные скины и звук. Ищу художников, аниматоров, UX/UI-дизайнеров и звукорежиссёров.">
+<meta property="og:image" content="https://fatima77i554-ship-it.github.io/catmaze-mod/img/scene-home.jpg">
+<meta property="og:url" content="https://fatima77i554-ship-it.github.io/catmaze-mod/">
+<meta name="twitter:card" content="summary_large_image">
+<title>Новые лица Catmaze</title>
+<meta name="description" content="Фанатский мод для Catmaze: перерисовка персонажей, позы, анимация, пиксельные скины, звуковые эффекты и озвучка. Набор в команду.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Press+Start+2P&family=Ruslan+Display&display=swap">
+<style>
+/* Layout: ночная палитра Catmaze, коричневые окна диалога из игры как акцент, пиксельные подписи. Одна колонка до 1120px. */
+:root {
+  --night: #181a23;
+  --night-2: #20232e;
+  --night-3: #2a2e3c;
+  --line: #393e51;
+  --ink: #efe7da;
+  --muted: #aba6b7;
+  --panel: #6d3b34;
+  --panel-deep: #2a1a1b;
+  --panel-edge: #c2877a;
+  --red: #c23f35;
+  --moon: #e7cdec;
+  --ok: #8fcf98;
+  --warn: #eab25a;
+
+  --f-display: "Ruslan Display", Georgia, "Times New Roman", serif;
+  --f-body: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-pixel: "Press Start 2P", ui-monospace, Menlo, monospace;
+
+  --s-1: 0.5rem; --s-2: 1rem; --s-3: 1.5rem; --s-4: 2.5rem; --s-5: 4rem;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--night);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1120px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 40px); }
+
+h1, h2 { font-family: var(--f-display); font-weight: 400; line-height: 1.1; text-wrap: balance; margin: 0; letter-spacing: 0.01em; }
+h1 { font-size: clamp(2.5rem, 6vw, 4.3rem); }
+h2 { font-size: clamp(1.9rem, 3.8vw, 2.8rem); }
+h3 { font-size: 1.05rem; font-weight: 600; margin: 0; line-height: 1.3; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--moon); text-underline-offset: 3px; }
+a:hover { color: var(--ink); }
+:focus-visible { outline: 2px solid var(--moon); outline-offset: 3px; border-radius: 3px; }
+
+.px { font-family: var(--f-pixel); font-size: 10px; line-height: 1.7; letter-spacing: 0.06em; text-transform: uppercase; }
+.eyebrow { color: var(--moon); }
+.lead { font-size: clamp(1.05rem, 1.6vw, 1.2rem); max-width: 36em; }
+.muted { color: var(--muted); }
+
+section { padding-block: clamp(3.5rem, 8vw, 6rem); }
+section + section { border-top: 1px solid var(--line); }
+.sec-head { display: grid; gap: var(--s-2); margin-bottom: var(--s-4); max-width: 44em; }
+.sec-head p { color: var(--muted); }
+.prose { display: grid; gap: var(--s-2); max-width: 36em; min-width: 0; }
+
+/* ---------- кнопки ---------- */
+.btns { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 13px 22px;
+  font: 600 1rem/1.2 var(--f-body);
+  color: var(--ink); text-decoration: none;
+  background: var(--red);
+  border: 2px solid var(--panel-deep);
+  box-shadow: 0 0 0 2px var(--panel-edge), 0 4px 0 2px var(--panel-deep);
+  border-radius: 4px;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn:hover { color: var(--ink); transform: translateY(-1px); }
+.btn:active { transform: translateY(2px); box-shadow: 0 0 0 2px var(--panel-edge), 0 1px 0 2px var(--panel-deep); }
+.btn--ghost { background: transparent; box-shadow: 0 0 0 2px var(--line); border-color: transparent; }
+.btn--ghost:active { box-shadow: 0 0 0 2px var(--line); }
+
+/* ---------- окно диалога, как в игре ---------- */
+.dlg {
+  position: relative;
+  background: var(--panel);
+  border: 3px solid var(--panel-deep);
+  box-shadow: 0 0 0 2px var(--panel-edge), inset 0 10px 24px rgba(0,0,0,.18);
+  border-radius: 5px;
+  padding: 1.2em 1.4em;
+  margin-top: 2.2em;
+}
+.dlg-tab {
+  position: absolute;
+  left: 10px; bottom: 100%;
+  margin-bottom: 5px;
+  padding: 0.4em 0.9em;
+  background: var(--panel);
+  border: 3px solid var(--panel-deep);
+  box-shadow: 0 0 0 2px var(--panel-edge);
+  border-radius: 4px;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.chip { display: inline-flex; align-items: center; gap: 6px; width: fit-content; padding: 5px 8px 4px; border-radius: 3px; font-family: var(--f-pixel); font-size: 8px; line-height: 1.4; letter-spacing: .05em; text-transform: uppercase; background: var(--night); color: var(--muted); border: 1px solid var(--line); white-space: nowrap; }
+.chip::before { content: ""; width: 6px; height: 6px; background: currentColor; }
+.chip--ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, transparent); }
+.chip--moon { color: var(--moon); border-color: color-mix(in srgb, var(--moon) 45%, transparent); }
+.chip--warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+
+/* ---------- шапка ---------- */
+.top { padding-block: clamp(1.25rem, 3vw, 2rem) clamp(3rem, 7vw, 5rem); }
+.bar { display: flex; justify-content: space-between; align-items: center; gap: var(--s-2); flex-wrap: wrap; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+.bar nav { display: flex; gap: 18px; flex-wrap: wrap; }
+.bar nav a { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+.bar nav a:hover { color: var(--ink); }
+.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.intro { display: grid; gap: var(--s-3); min-width: 0; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--muted); }
+.tags span::before { content: "■ "; color: var(--red); }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; min-width: 0; margin: 0; }
+.tiles div { aspect-ratio: 3 / 4; display: grid; place-items: end center; background: radial-gradient(70% 60% at 50% 72%, var(--night-3), var(--night-2)); border-radius: 4px; overflow: hidden; }
+.tiles img { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; padding-top: 8%; }
+.tiles figcaption { grid-column: 1 / -1; font-size: 0.88rem; color: var(--muted); }
+
+/* ---------- игра ---------- */
+.game { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+.pics { display: grid; gap: var(--s-3); min-width: 0; }
+figure { margin: 0; display: grid; gap: 10px; min-width: 0; }
+figure img { display: block; width: 100%; border-radius: 4px; border: 2px solid var(--line); image-rendering: pixelated; }
+figcaption { font-size: 0.9rem; color: var(--muted); }
+.solo { margin-top: var(--s-4); padding: clamp(1.25rem, 3vw, 2rem); border: 2px solid var(--line); border-radius: 6px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3); align-items: center; }
+.solo b { font-family: var(--f-display); font-weight: 400; font-size: clamp(3rem, 7vw, 4.5rem); line-height: 1; color: var(--moon); }
+.solo p { font-size: 1.08rem; max-width: 40em; }
+.facts { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-3); margin: var(--s-4) 0 0; }
+.facts div { display: grid; gap: 6px; align-content: start; padding-top: 12px; border-top: 3px solid var(--line); min-width: 0; }
+.facts div:last-child { border-top-color: var(--warn); }
+.facts dt { color: var(--muted); font-size: 8px; }
+.facts dd { margin: 0; font-weight: 600; }
+.platforms { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: var(--s-3); }
+.platforms .px { color: var(--muted); font-size: 8px; }
+.platforms ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.platforms li { padding: 7px 12px; border: 2px solid var(--line); border-radius: 4px; font-size: 0.92rem; font-weight: 500; white-space: nowrap; }
+.platforms li.is-console { border-color: var(--moon); color: var(--moon); }
+
+/* ---------- автор ---------- */
+.author { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+blockquote { margin: 0; padding: 4px 0 4px 20px; border-left: 3px solid var(--red); display: grid; gap: 8px; }
+blockquote p { font-family: var(--f-display); font-size: clamp(1.3rem, 2.4vw, 1.7rem); line-height: 1.25; }
+blockquote footer { font-size: 0.88rem; color: var(--muted); padding: 0; border: 0; }
+.fever { display: grid; gap: 14px; padding: clamp(1.25rem, 3vw, 1.8rem); background: var(--night-2); border-radius: 6px; box-shadow: inset 0 0 0 2px var(--line); min-width: 0; }
+.fever-img { display: block; width: 100%; border-radius: 4px; }
+.fever h3 { font-family: var(--f-display); font-weight: 400; font-size: 2.2rem; }
+.fever p { color: var(--muted); }
+.fever p.strong { color: var(--ink); }
+
+/* ---------- план ---------- */
+.plan { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--s-4); }
+.pi { display: grid; gap: 8px; padding-block: 18px; border-top: 1px solid var(--line); min-width: 0; }
+.pi-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.pi p { color: var(--muted); font-size: 0.97rem; }
+.idea { margin-top: var(--s-4); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-3); align-items: center; padding: clamp(1.25rem, 3vw, 1.8rem); background: var(--night-2); border-radius: 6px; }
+.idea p + p { margin-top: 6px; color: var(--muted); }
+
+/* ---------- зачем ---------- */
+.why { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+.gets { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.gets li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; }
+.gets li::before { content: "+"; font-family: var(--f-pixel); font-size: 12px; line-height: 1.9; color: var(--ok); }
+.gets-note { margin-top: var(--s-3); color: var(--muted); }
+
+/* ---------- процесс ---------- */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-2); counter-reset: st; }
+.steps li { counter-increment: st; display: grid; gap: 10px; align-content: start; padding: 18px 16px 20px; background: var(--night-2); border-radius: 4px; min-width: 0; }
+.steps li::before { content: counter(st); font-family: var(--f-pixel); font-size: 14px; color: var(--muted); }
+.steps li p { color: var(--muted); font-size: 0.93rem; }
+.steps li.is-now { background: var(--night-3); box-shadow: inset 0 0 0 2px var(--moon); }
+.steps li.is-now::before { color: var(--moon); }
+.path-title { margin: var(--s-5) 0 var(--s-2); }
+.path { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 8px; align-items: center; counter-reset: pa; }
+.path li { counter-increment: pa; display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; background: var(--night-2); border-radius: 4px; font-size: 0.95rem; }
+.path li::before { content: counter(pa); font-family: var(--f-pixel); font-size: 9px; color: var(--moon); }
+.path li:not(:last-child)::after { content: "→"; color: var(--muted); margin-left: 6px; }
+
+/* ---------- бриф ---------- */
+.brief { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--s-4); padding: clamp(1.25rem, 3vw, 2rem); }
+.brief-img { display: grid; place-items: end center; min-width: 0; }
+.brief-img img { max-height: 440px; width: auto; }
+.brief-info { display: grid; gap: var(--s-3); align-content: start; min-width: 0; }
+.brief-info ul { margin: 6px 0 0; padding-left: 1.1em; display: grid; gap: 4px; }
+.brief-info li::marker { color: var(--panel-edge); }
+.brief-info .px { color: var(--moon); margin-bottom: 4px; display: block; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-3); }
+.swatches { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.sw { display: grid; gap: 4px; justify-items: center; }
+.sw i { width: 44px; height: 44px; border-radius: 3px; border: 2px solid var(--panel-deep); box-shadow: 0 0 0 1px var(--panel-edge); }
+.sw small { font-family: var(--f-pixel); font-size: 7px; opacity: .85; }
+.emo-wrap { grid-column: 1 / -1; overflow-x: auto; }
+.emo { width: 100%; border-collapse: collapse; font-size: 0.95rem; min-width: 520px; }
+.emo caption { text-align: left; padding-bottom: 10px; color: var(--moon); }
+.emo th, .emo td { text-align: left; vertical-align: top; padding: 10px 12px; border-top: 1px solid rgba(239,231,218,.18); }
+.emo thead th { border-top: 0; font-weight: 500; color: var(--moon); font-size: 0.85rem; }
+.emo td:first-child { font-family: var(--f-pixel); font-size: 11px; color: var(--moon); width: 3em; padding-top: 13px; }
+.emo td:nth-child(2) { font-weight: 600; white-space: nowrap; }
+.brief-foot { grid-column: 1 / -1; font-size: 0.9rem; opacity: .8; }
+
+/* ---------- доска героев ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--s-3); }
+.filter { font: 500 0.92rem/1 var(--f-body); color: var(--muted); background: transparent; border: 2px solid var(--line); border-radius: 4px; padding: 9px 14px; cursor: pointer; }
+.filter[aria-pressed="true"] { color: var(--night); background: var(--moon); border-color: var(--moon); }
+.filter span { opacity: .7; margin-left: 4px; font-variant-numeric: tabular-nums; }
+.board { display: grid; grid-template-columns: repeat(auto-fill, minmax(156px, 1fr)); gap: 14px; }
+.hc { display: grid; grid-template-rows: auto 1fr; background: var(--night-2); border-radius: 4px; overflow: hidden; min-width: 0; }
+.hc-img { aspect-ratio: 4 / 5; display: grid; place-items: end center; background: radial-gradient(70% 60% at 50% 70%, var(--night-3), var(--night-2)); overflow: hidden; }
+.hc-img img { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; transition: transform .25s ease; }
+.hc:hover .hc-img img { transform: scale(1.04); }
+.hc-body { display: grid; gap: 6px; align-content: start; padding: 12px 12px 14px; }
+.hc-meta { color: var(--muted); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.hc-tag { font-size: 0.8rem; color: var(--moon); }
+.hc[data-status="new"] .hc-img img { filter: grayscale(1) brightness(.55); }
+.board-note { margin-top: var(--s-3); color: var(--muted); font-size: 0.95rem; max-width: 44em; }
+
+/* ---------- роли ---------- */
+.roles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-2); }
+.role { display: grid; gap: 10px; align-content: start; padding: 20px 18px 22px; background: var(--night-2); border-radius: 4px; min-width: 0; }
+.role .px { color: var(--muted); font-size: 8px; }
+.role p { font-size: 0.95rem; }
+.role .need { color: var(--muted); font-size: 0.88rem; padding-top: 10px; border-top: 1px solid var(--line); }
+.role.is-main { grid-column: span 2; box-shadow: inset 0 0 0 2px var(--moon); padding: 24px 24px 26px; }
+.role.is-main .px { color: var(--moon); }
+.role.is-main h3 { font-family: var(--f-display); font-weight: 400; font-size: 1.8rem; }
+.role.is-main p { font-size: 1.02rem; }
+.role.is-open { background: transparent; border: 2px dashed var(--line); }
+.skills { margin-top: var(--s-4); max-width: 820px; display: grid; gap: 10px; padding-left: 20px; border-left: 3px solid var(--moon); }
+.skills p:first-child { font-size: 1.1rem; }
+.skills p + p { color: var(--muted); }
+
+/* ---------- кто ведёт ---------- */
+.who .dlg { max-width: 760px; font-size: 1.08rem; line-height: 1.65; padding: 1.4em 1.6em; }
+.who .dlg p + p { margin-top: .8em; }
+
+/* ---------- как попасть ---------- */
+.join { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--s-4); align-items: start; }
+.join ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; counter-reset: j; }
+.join ol li { counter-increment: j; display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 4px 14px; }
+.join ol li::before { content: counter(j); grid-row: span 2; font-family: var(--f-pixel); font-size: 13px; color: var(--moon); padding-top: 4px; }
+.join ol li p { color: var(--muted); font-size: 0.95rem; }
+.contact { padding: 1.4em 1.5em 1.5em; display: grid; gap: 14px; }
+.contact .handle { font-family: var(--f-pixel); font-size: clamp(11px, 1.6vw, 14px); line-height: 1.6; word-break: break-all; user-select: all; }
+.contact .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.copy { font: 600 0.9rem/1 var(--f-body); color: var(--ink); background: var(--panel-deep); border: 2px solid var(--panel-edge); border-radius: 4px; padding: 9px 14px; cursor: pointer; }
+.copy-done { font-size: 0.85rem; color: var(--ok); }
+
+/* ---------- вопросы ---------- */
+.faq { display: grid; max-width: 820px; }
+.faq details { border-top: 1px solid var(--line); }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; list-style: none; padding: 18px 40px 18px 0; position: relative; font-weight: 600; font-size: 1.05rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 6px; top: 16px; font-family: var(--f-pixel); font-size: 14px; color: var(--moon); }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { padding: 0 0 20px; color: var(--muted); max-width: 40em; }
+
+.page-foot { padding-block: var(--s-4) var(--s-5); border-top: 1px solid var(--line); color: var(--muted); font-size: 0.88rem; }
+.page-foot .wrap { display: grid; gap: 8px; }
+
+/* ---------- адаптив ---------- */
+@media (max-width: 980px) {
+  .hero, .game, .author, .why, .join { grid-template-columns: minmax(0, 1fr); }
+  .hero .tiles { max-width: 560px; }
+  .pics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .plan { grid-template-columns: minmax(0, 1fr); }
+  .brief { grid-template-columns: minmax(0, 1fr); }
+  .brief-img img { max-height: 320px; }
+  .idea { grid-template-columns: minmax(0, 1fr); }
+  .solo { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .two, .pics, .steps, .roles { grid-template-columns: minmax(0, 1fr); }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .role.is-main { grid-column: auto; }
+  .board { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .bar nav { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <span class="px eyebrow">Catmaze · фанатский мод</span>
+      <nav aria-label="Разделы">
+        <a href="#game">Игра</a>
+        <a href="#plan">Что делаем</a>
+        <a href="#process">Как работаем</a>
+        <a href="#roles">Кого ищем</a>
+        <a href="#join">Связь</a>
+      </nav>
+    </div>
+
+    <div class="hero">
+      <div class="intro">
+        <span class="px eyebrow">Набор в команду</span>
+        <h1>Фанатский мод для Catmaze</h1>
+        <p class="lead">Перерисовываем персонажей, добавляем позы, анимацию, пиксельные скины, звуковые эффекты и&nbsp;озвучку.</p>
+        <p class="muted">В первую очередь ищу художников. Но творческим людям рада в&nbsp;целом: аниматорам, UX/UI-дизайнерам, тем, кто работает со звуком.</p>
+        <div class="tags px"><span>Бесплатно</span><span>Все имена в&nbsp;титрах</span><span>1–2 месяца</span></div>
+        <div class="btns">
+          <a class="btn" href="#roles">Кого ищем</a>
+          <a class="btn btn--ghost" href="#game">Что за игра</a>
+        </div>
+      </div>
+      <figure class="tiles">
+        <div><img src="img/alesta.png" alt="Алеста"></div>
+        <div><img src="img/volibor.png" alt="Волибор"></div>
+        <div><img src="img/kikimora.png" alt="Кикимора"></div>
+        <div><img src="img/bayun.png" alt="Кот Баюн"></div>
+        <div><img src="img/gorislava.png" alt="Горислава"></div>
+        <div><img src="img/likho.png" alt="Лихо"></div>
+        <figcaption>Портреты из оригинальной игры. Всего героев 26.</figcaption>
+      </figure>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="game">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Об игре</span>
+        <h2>Что такое Catmaze</h2>
+      </div>
+      <div class="game">
+        <div class="prose">
+          <p>Catmaze вышла в&nbsp;2018 году. Это метроидвания по мотивам славянских мифов, и&nbsp;начинается она дома: мама юной ведьмы Алесты тяжело больна, отвары Воронихи уже не помогают. Спасти её можно только через Навь, мир мёртвых. Дорога туда давно потеряна.</p>
+          <p>Проводники в&nbsp;этом мире коты. Они ходят между Явью и&nbsp;Навью, за это им и&nbsp;дали девять жизней. Кот Баюн готов один раз нарушить порядок ради мамы Алесты. Чем это обернётся, игра расскажет сама.</p>
+          <p>Дальше болота, деревни и&nbsp;вековые леса с&nbsp;кикиморами, анчутками и&nbsp;русалками. Боссы пришли из&nbsp;сказок, и&nbsp;у&nbsp;каждого своя история. В&nbsp;бою помогают фамильяры, а&nbsp;от побочных квестов зависит, чем всё закончится. Сохраняться можно только в&nbsp;особых местах, как в&nbsp;старых метроидваниях.</p>
+          <p><a href="https://store.steampowered.com/app/620220/" target="_blank" rel="noopener">Catmaze в Steam ↗</a></p>
+        </div>
+        <div class="pics">
+          <figure>
+            <img src="img/scene-home.jpg" alt="Пиксельный дом с черепичной крышей посреди тёмного леса" loading="lazy">
+            <figcaption>Дом из сюжетной сцены</figcaption>
+          </figure>
+          <figure>
+            <img src="img/scene-moon.jpg" alt="Огромная розовая луна в фиолетовом ночном небе" loading="lazy">
+            <figcaption>Ночное небо из вступления. Кадры собраны из файлов игры.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="solo">
+        <b>1</b>
+        <p>Столько человек сделали Catmaze. Слава Грис сам написал код на Construct&nbsp;2 и&nbsp;сам нарисовал весь мир: уровни, спрайты, портреты. Со стороны только музыка, её написали Expecte Amour. А&nbsp;в&nbsp;2022 году игра вышла на Nintendo Switch, PlayStation и&nbsp;Xbox. Для инди-игры одного автора попасть на Switch&nbsp;- уже серьёзная планка.</p>
+      </div>
+
+      <dl class="facts">
+        <div><dt class="px">Вышла на ПК</dt><dd>24 мая 2018</dd></div>
+        <div><dt class="px">На консолях</dt><dd>9 сентября 2022</dd></div>
+        <div><dt class="px">Steam</dt><dd>606 отзывов, 83% положительных</dd></div>
+        <div><dt class="px">Движок</dt><dd>Construct&nbsp;2</dd></div>
+        <div><dt class="px">Модов</dt><dd>Пока ни одного</dd></div>
+      </dl>
+      <div class="platforms">
+        <span class="px">Где играть</span>
+        <ul>
+          <li>Windows</li><li>Mac</li><li>Linux</li>
+          <li class="is-console">Nintendo Switch</li>
+          <li class="is-console">PlayStation&nbsp;4</li>
+          <li class="is-console">PlayStation&nbsp;5</li>
+          <li class="is-console">Xbox One</li>
+          <li class="is-console">Xbox Series X|S</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="author">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Автор игры</span>
+        <h2>Слава Грис</h2>
+      </div>
+      <div class="author">
+        <div class="prose">
+          <p>По образованию Слава психолог. Игры начал делать примерно в&nbsp;2014 году и, по его же словам, рисовать тогда толком не умел. Учился на фрилансе: перерисовывал заказы, пока клиент не оставался доволен.</p>
+          <p>Первую игру, Reflection&nbsp;of&nbsp;Mine, он собрал на Construct&nbsp;2. Потом вышли Catmaze (2018) и&nbsp;Fearmonium (2021), а&nbsp;ещё он написал две книги об&nbsp;играх. В&nbsp;свои игры он переносит идеи из&nbsp;психологии и&nbsp;мифологии: в&nbsp;Catmaze это славянские сказки, в&nbsp;Fearmonium фобии.</p>
+          <blockquote>
+            <p>«Игры могут сказать больше, чем „нажми на X, чтобы победить“».</p>
+            <footer>Слава Грис, обращение к&nbsp;игрокам в&nbsp;Steam, 2019. Перевод с&nbsp;английского. <a href="https://steamcommunity.com/groups/redblackspade" target="_blank" rel="noopener">Источник ↗</a></footer>
+          </blockquote>
+        </div>
+        <div class="fever">
+          <img class="fever-img" src="img/fevercide.jpg" alt="Обложка Fevercide: девушка в красном платье на фоне ночного города и луны" loading="lazy">
+          <span class="chip chip--warn">Сейчас в разработке</span>
+          <h3>Fevercide</h3>
+          <p>Новая игра Славы, и&nbsp;снова в&nbsp;одиночку. Метроидвания с&nbsp;элементами хоррора: 1930 год, Российская империя, где революции так и&nbsp;не случилось, Петербург обрастает домами в&nbsp;стиле ар-деко. Героиня Сандра садится на поезд с&nbsp;заброшенного вокзала, который возит мертвецов по кругам ада. Анимация покадровая.</p>
+          <p class="strong">Открой страницу и&nbsp;сравни с&nbsp;Catmaze 2018 года. Видно, как вырос его навык.</p>
+          <div class="btns">
+            <a class="btn" href="https://store.steampowered.com/app/3314140/Fevercide/" target="_blank" rel="noopener">Добавить в желаемое в Steam ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="plan">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Что делаем</span>
+        <h2>Что войдёт в мод</h2>
+        <p>Это план, к&nbsp;которому идём. Код, сборку и&nbsp;звуковые эффекты я&nbsp;беру на себя, остальное делаем командой.</p>
+      </div>
+      <div class="plan">
+        <div class="pi"><div class="pi-head"><h3>Портреты персонажей</h3><span class="chip chip--moon">Ищем людей</span></div><p>26 героев рисуем заново в&nbsp;одном стиле. Узнаваемость сохраняем: цвета, силуэты, характер.</p></div>
+        <div class="pi"><div class="pi-head"><h3>Позы и эмоции</h3><span class="chip chip--moon">Ищем людей</span></div><p>У каждого героя базовая поза и&nbsp;смена эмоций под реплики. Всё уже расписано: 189 эмоций на 1&nbsp;477 реплик.</p></div>
+        <div class="pi"><div class="pi-head"><h3>Анимация персонажей</h3><span class="chip chip--moon">Ищем людей</span></div><p>Моргание и&nbsp;смена эмоций в&nbsp;портретах, новые анимации пиксельным героям.</p></div>
+        <div class="pi"><div class="pi-head"><h3>Пиксельные скины</h3><span class="chip chip--moon">Ищем людей</span></div><p>Новые наряды для Алесты. В&nbsp;её основном спрайте около 150 маленьких кадров.</p></div>
+        <div class="pi"><div class="pi-head"><h3>Интерфейс диалога</h3><span class="chip chip--moon">Ищем людей</span></div><p>Окно реплики, плашка с&nbsp;именем, смена говорящего. Всё должно читаться в&nbsp;родном разрешении игры 480×270.</p></div>
+        <div class="pi"><div class="pi-head"><h3>Новые ассеты</h3><span class="chip chip--moon">Ищем людей</span></div><p>Бочки, ящики и&nbsp;другие объекты для уровней.</p></div>
+        <div class="pi"><div class="pi-head"><h3>Звуковые эффекты</h3><span class="chip chip--ok">Делаю сама</span></div><p>Сейчас диалог просто листается, и&nbsp;герои на него никак не отзываются. Добавим звуки: кашель мамы в&nbsp;первой сцене, вздохи, смешки, реакции.</p></div>
+        <div class="pi"><div class="pi-head"><h3>Импакт</h3><span class="chip chip--ok">Делаю сама</span></div><p>Доработаем отклик игры на удары, попадания и&nbsp;действия.</p></div>
+        <div class="pi"><div class="pi-head"><h3>Озвучка</h3><span class="chip chip--warn">В планах</span></div><p>Хотим, чтобы герои заговорили. Реплик почти 1&nbsp;900, поэтому сроки пока не ясны.</p></div>
+        <div class="pi"><div class="pi-head"><h3>Комиксные вставки</h3><span class="chip chip--warn">В планах</span></div><p>Рисованные вставки для сюжетных сцен.</p></div>
+      </div>
+      <div class="idea">
+        <div>
+          <p><b>Есть идея сверх списка?</b></p>
+          <p>Предлагай. Если она ложится в&nbsp;игру, обсудим, нарисуем и&nbsp;встроим.</p>
+        </div>
+        <a class="btn btn--ghost" href="#join">Написать</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Зачем это тебе</span>
+        <h2>Мод как вход в индустрию</h2>
+      </div>
+      <div class="why">
+        <div class="prose">
+          <p>Своя игра делается годами. Мод занимает пару месяцев, и&nbsp;на выходе твоя работа живёт внутри настоящей игры в&nbsp;Steam.</p>
+          <p>Через моды в&nbsp;индустрию попадали многие. Counter-Strike начинался как мод для Half-Life. Dota выросла из&nbsp;пользовательской карты для Warcraft&nbsp;III.</p>
+          <p>Для портфолио это весомее учебного задания. Сразу видно, что ты умеешь работать по брифу, попадать в&nbsp;общий стиль и&nbsp;доводить дело до релиза.</p>
+        </div>
+        <div>
+          <h3>Что ты получишь</h3>
+          <ul class="gets" style="margin-top:14px">
+            <li>Имя в&nbsp;титрах мода, в&nbsp;руководстве в&nbsp;Steam и&nbsp;на странице мода на Nexus Mods.</li>
+            <li>Разбор каждой работы: что получилось, что поправить и&nbsp;почему.</li>
+            <li>Опыт работы по брифу и&nbsp;с&nbsp;правками, как в&nbsp;студии.</li>
+            <li>Кейс для портфолио: от эскиза до кадра в&nbsp;игре.</li>
+            <li>Советы по портфолио и&nbsp;о&nbsp;том, как устроена работа в&nbsp;геймдеве.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Как работаем</span>
+        <h2>Пайплайн</h2>
+        <p>Рисовать будут разные люди, а&nbsp;выглядеть всё должно как работа одного художника. Поэтому сначала общие правила и&nbsp;модельный лист, потом рисунки. Каждую работу я&nbsp;смотрю и&nbsp;свожу в&nbsp;общий стиль.</p>
+      </div>
+      <ol class="steps">
+        <li><h3>Разобрать игру</h3><p>929 файлов игры собраны и описаны. Каждый герой расписан по репликам.</p><span class="chip chip--ok">Готово</span></li>
+        <li class="is-now"><h3>Правила стиля</h3><p>Пропорции, толщина линий, детализация, палитры, силуэты. Из этого получится модельный лист для всех.</p><span class="chip chip--moon">Сейчас</span></li>
+        <li><h3>Интерфейс</h3><p>Варианты окна диалога, проверка в разрешении 480×270.</p><span class="chip">Дальше</span></li>
+        <li><h3>Персонажи</h3><p>Портреты, позы, эмоции, анимация, скины.</p><span class="chip">Дальше</span></li>
+        <li><h3>Звук</h3><p>Звуковые эффекты в диалогах и, если получится, озвучка.</p><span class="chip">Дальше</span></li>
+        <li><h3>Сборка и релиз</h3><p>Собираю всё в игру, тестирую и выкладываю в Steam и на Nexus Mods.</p><span class="chip">Дальше</span></li>
+      </ol>
+
+      <h3 class="path-title">Путь одного героя</h3>
+      <ol class="path">
+        <li>Бриф</li>
+        <li>Три силуэта</li>
+        <li>Выбираем направление</li>
+        <li>Чистовик по модельному листу</li>
+        <li>Эмоции и веки на слоях</li>
+        <li>Проверка в игре</li>
+        <li>Правки</li>
+        <li>В сборку</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="brief">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Пример брифа</span>
+        <h2>Лист на каждого героя</h2>
+        <p>Что сохранить, что упростить, какие цвета и как сыграть каждую эмоцию. Вот Волибор.</p>
+      </div>
+      <div class="dlg brief">
+        <span class="dlg-tab">Волибор · бриф</span>
+        <div class="brief-img"><img src="img/volibor-big.png" alt="Текущий портрет Волибора из игры: синие волосы, красные рога и красный шарф" loading="lazy"></div>
+        <div class="brief-info">
+          <div class="two">
+            <div>
+              <span class="px">Сохраняем</span>
+              <ul>
+                <li>Синие волосы и красные рога</li>
+                <li>Красный шарф, светлая серо-зелёная кожа</li>
+                <li>Острые уши и мех на голенях</li>
+                <li>Рука у шарфа, открытый жест другой рукой</li>
+              </ul>
+            </div>
+            <div>
+              <span class="px">Упрощаем</span>
+              <ul>
+                <li>3–5 крупных масс волос вместо мелких острых прядей</li>
+                <li>Фалды жилета проще, цвет и форма те же</li>
+                <li>Одна основная тень на материал</li>
+                <li>Глаза, контур и голова по общему модельному листу</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <span class="px">Палитра</span>
+            <div class="swatches">
+              <div class="sw"><i style="background:#495A6C"></i><small>495A6C</small></div>
+              <div class="sw"><i style="background:#A74D46"></i><small>A74D46</small></div>
+              <div class="sw"><i style="background:#D1D6C2"></i><small>D1D6C2</small></div>
+              <div class="sw"><i style="background:#9E784F"></i><small>9E784F</small></div>
+              <div class="sw"><i style="background:#2D3544"></i><small>2D3544</small></div>
+            </div>
+          </div>
+          <div>
+            <span class="px">Характер позы</span>
+            <p>Живость и готовность двинуться с места.</p>
+          </div>
+        </div>
+        <div class="emo-wrap">
+          <table class="emo">
+            <caption class="px">Эмоции · 6 из 11</caption>
+            <thead><tr><th scope="col">Код</th><th scope="col">Состояние</th><th scope="col">Как передать в рисунке</th></tr></thead>
+            <tbody>
+              <tr><td>N</td><td>Обычный разговор</td><td>Внимательные глаза, расслабленные брови, маленький рот.</td></tr>
+              <tr><td>H</td><td>Смущение</td><td>Взгляд вниз, брови приподняты внутри, неловкая улыбка быстро исчезает.</td></tr>
+              <tr><td>J</td><td>Восторг</td><td>Открытый радостный взгляд, поднятые брови, улыбка.</td></tr>
+              <tr><td>K</td><td>Заговорщицкая надежда</td><td>Прищур с улыбкой, взгляд возвращается к Алесте. Без зловещей ухмылки.</td></tr>
+              <tr><td>D</td><td>Решимость</td><td>Брови сведены, прямой взгляд, напряжённый ровный рот.</td></tr>
+              <tr><td>W</td><td>Нежность, облегчение</td><td>Глаза смягчены, брови расслаблены, тихая улыбка.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="brief-foot">Остальные эмоции, позы и сцены есть в полном брифе. Осторожно, там спойлеры.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="heroes">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Герои</span>
+        <h2>Кого можно взять</h2>
+        <p>26 героев с портретами. Число эмоций показывает объём: Чудовищу хватит двух, Алесте нужно тринадцать. Хочешь нарисовать кого-то конкретного, скажи, договоримся.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Фильтр героев">
+        <button class="filter" type="button" id="f-all" data-filter="all" aria-pressed="true">Все<span></span></button>
+        <button class="filter" type="button" id="f-free" data-filter="free" aria-pressed="false">Можно взять<span></span></button>
+        <button class="filter" type="button" id="f-new" data-filter="new" aria-pressed="false">Новый дизайн<span></span></button>
+        <button class="filter" type="button" id="f-taken" data-filter="taken" aria-pressed="false">В работе<span></span></button>
+      </div>
+      <div class="board" id="board"></div>
+      <p class="board-note">Портреты на доске взяты из оригинальной игры. Домового, Жреца и Чернобога придумываем заново: прежние варианты не подошли. Идеи художника тут особенно к месту, направление выберем вместе.</p>
+    </div>
+  </section>
+
+  <section id="roles">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Кого ищем</span>
+        <h2>Роли в команде</h2>
+      </div>
+      <div class="roles">
+        <div class="role is-main">
+          <span class="px">В первую очередь</span>
+          <h3>Художник</h3>
+          <p>Берёшь одного или нескольких героев: базовая поза, дополнительные позы и эмоции по брифу. Веки и рот на отдельных слоях, чтобы их можно было анимировать. Позже будут комиксные вставки и ассеты для уровней.</p>
+          <p class="need">Рисуешь персонажей и понимаешь, как работают форма, мимика и цвет.</p>
+        </div>
+        <div class="role">
+          <span class="px">Тоже ищу</span>
+          <h3>Аниматор</h3>
+          <p>Моргание, смена эмоций и поз во время диалога, новые движения героям.</p>
+          <p class="need">Анимируешь персонажей в любой программе.</p>
+        </div>
+        <div class="role">
+          <span class="px">Тоже ищу</span>
+          <h3>Пиксель-арт художник</h3>
+          <p>Скины для Алесты и новые пиксельные ассеты.</p>
+          <p class="need">Рисуешь пиксель-арт и анимируешь спрайты.</p>
+        </div>
+        <div class="role">
+          <span class="px">Тоже ищу</span>
+          <h3>UX/UI-дизайнер</h3>
+          <p>Окно диалога, плашка с именем, рамки. И то, как диалог ощущается: появление реплик, смена говорящего.</p>
+          <p class="need">Делаешь макеты интерфейсов в Figma или похожем редакторе.</p>
+        </div>
+        <div class="role">
+          <span class="px">Тоже ищу</span>
+          <h3>Звук и музыка</h3>
+          <p>Звуковые эффекты и музыкальные акценты. Основное делаю сама, но вдвоём быстрее и интереснее.</p>
+          <p class="need">Работаешь со звуком или пишешь музыку.</p>
+        </div>
+        <div class="role">
+          <span class="px">Тоже ищу</span>
+          <h3>Актёр озвучки</h3>
+          <p>Если дойдём до озвучки: почти 40 ролей, от Алесты до говорящих котов.</p>
+          <p class="need">Умеешь играть голосом.</p>
+        </div>
+        <div class="role is-open">
+          <span class="px">Свой вариант</span>
+          <h3>Другие творческие люди</h3>
+          <p>Умеешь что-то, что пригодится моду? Напиши, обсудим.</p>
+        </div>
+      </div>
+      <div class="skills">
+        <p>Одна просьба: приходи с базовым навыком в своём деле.</p>
+        <p>Мод делается за пару месяцев, и за это время научиться рисовать или работать со звуком с нуля просто не успеть. Подсказать, направить и разобрать работу я помогу всегда. Опыт работы не нужен, учебные проекты тоже подойдут.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="who" class="who">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Кто ведёт проект</span>
+        <h2>Пара слов от меня</h2>
+      </div>
+      <div class="dlg">
+        <span class="dlg-tab">Фатима</span>
+        <p>Привет! Я Фатима, геймдизайнер. В этом моде на мне пайплайн, брифы, код, звук и сборка.</p>
+        <p>Каждый рисунок проходит через меня, чтобы работы разных людей сложились в один стиль. Если удобнее поговорить вживую, давай встретимся в кофейне и всё обсудим.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="join">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Как присоединиться</span>
+        <h2>Пять шагов в команду</h2>
+      </div>
+      <div class="join">
+        <ol>
+          <li><h3>Напиши мне</h3><p>Какая роль, какой герой и 2–3 твои работы. Учебные подойдут.</p></li>
+          <li><h3>Тестовое</h3><p>Художнику три силуэта выбранного героя. Остальным примеры своих работ: анимации, спрайты, макеты, звуки или проба голоса.</p></li>
+          <li><h3>Бриф и сроки</h3><p>Обсуждаем задачу и темп. Можно вживую, в кофейне.</p></li>
+          <li><h3>Работа с разборами</h3><p>Показываешь промежуточные версии, я даю обратную связь.</p></li>
+          <li><h3>Релиз</h3><p>Мод выходит, твоё имя в титрах.</p></li>
+        </ol>
+        <div class="dlg contact">
+          <span class="dlg-tab">Связь</span>
+          <span class="px" id="contact-label">Telegram</span>
+          <span class="handle" id="contact-handle"></span>
+          <div class="row">
+            <a class="btn" id="contact-link" href="https://t.me/fatima_fatimka" target="_blank" rel="noopener">Написать в Telegram ↗</a>
+            <button class="copy" type="button" id="copy-btn">Скопировать</button>
+            <span class="copy-done" id="copy-done" hidden>Скопировано</span>
+          </div>
+          <p class="muted" id="contact-note"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="px eyebrow">Вопросы</span>
+        <h2>Вопросы и ответы</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Это официальный проект?</summary><p>Нет, фанатский. Разработчик игры в нём не участвует, мод делаем своими силами.</p></details>
+        <details><summary>Сколько за это платят?</summary><p>Нисколько. Мод бесплатный и для игроков, и для команды. Взамен опыт, разборы и имя в титрах.</p></details>
+        <details><summary>Нужен ли опыт?</summary><p>Стаж не важен, учебные работы тоже подойдут. Главное, чтобы навык уже был: рисуешь, анимируешь, делаешь интерфейсы или работаешь со звуком.</p></details>
+        <details><summary>Сколько времени это займёт?</summary><p>Примерно 1–2 месяца, может, чуть дольше. Темп обсуждаем вместе. Не успеваешь, скажи заранее, ничего страшного.</p></details>
+        <details><summary>А если я передумаю?</summary><p>Предупреди меня. Герой вернётся на доску, а то, что уже вошло в мод, останется с твоим именем в титрах.</p></details>
+        <details><summary>Можно предложить свою идею?</summary><p>Конечно. Расскажи, и решим вместе, впишется ли она в игру и в сроки.</p></details>
+        <details><summary>Можно выкладывать работы в портфолио?</summary><p>Да. Продавать нельзя: персонажи и мир принадлежат автору игры.</p></details>
+        <details><summary>Нужно что-то подписывать?</summary><p>Да, короткое соглашение: мод бесплатный, ты автор своих работ и можешь показывать их в портфолио. Если тебе ещё нет 18, его подпишет и кто-то из родителей.</p></details>
+        <details><summary>Где выйдет мод?</summary><p>В сообществе Catmaze в Steam, в виде руководства с установкой, и на Nexus Mods. Файлы будут лежать на Google Диске и Яндекс Диске. Мастерской Steam у игры нет, так что мод ставится по инструкции.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="page-foot">
+  <div class="wrap">
+    <p>Catmaze, Reflection of Mine, Fearmonium и Fevercide: игры Славы Гриса (Redblack Spade).</p>
+    <p>Это неофициальный фанатский мод. Портреты и кадры взяты из игры, чтобы показать, с чем мы работаем.</p>
+  </div>
+</footer>
+
+<script>
+/* ===== Что здесь можно менять =====
+   CONTACT — твой контакт для связи.
+   HEROES  — статусы героев. status: "free" (можно взять), "taken" (в работе),
+             "done" (готово), "new" (новый дизайн). who: имя участника, если герой занят. */
+const CONTACT = {
+  label: "Telegram",
+  handle: "@fatima_fatimka",
+  url: "https://t.me/fatima_fatimka",
+  note: "Напиши, какая роль интересна, и приложи 2–3 работы."
+};
+
+const HEROES = [
+  { id: "alesta",       name: "Алеста",     emo: 13, lines: 486, status: "free", tag: "Главная героиня" },
+  { id: "radmila",      name: "Радмила",    emo: 8,  lines: 60,  status: "free" },
+  { id: "voronikha",    name: "Ворониха",   emo: 8,  lines: 144, status: "free" },
+  { id: "volibor",      name: "Волибор",    emo: 11, lines: 73,  status: "free", tag: "Есть пример брифа" },
+  { id: "siyana",       name: "Сияна",      emo: 8,  lines: 32,  status: "free" },
+  { id: "bolotnik",     name: "Болотник",   emo: 6,  lines: 28,  status: "free" },
+  { id: "gorislava",    name: "Горислава",  emo: 9,  lines: 87,  status: "free" },
+  { id: "mara",         name: "Мара",       emo: 7,  lines: 53,  status: "free" },
+  { id: "borovik",      name: "Боровик",    emo: 8,  lines: 46,  status: "free" },
+  { id: "kikimora",     name: "Кикимора",   emo: 7,  lines: 33,  status: "free" },
+  { id: "kuznets",      name: "Кузнец",     emo: 6,  lines: 19,  status: "free" },
+  { id: "chernobog",    name: "Чернобог",   emo: 8,  lines: 46,  status: "new" },
+  { id: "chudovishche", name: "Чудовище",   emo: 2,  lines: 3,   status: "free" },
+  { id: "likho",        name: "Лихо",       emo: 6,  lines: 25,  status: "free" },
+  { id: "bayun",        name: "Кот Баюн",   emo: 4,  lines: 31,  status: "free" },
+  { id: "lesavka",      name: "Лесавка",    emo: 8,  lines: 21,  status: "free" },
+  { id: "svetozara",    name: "Светозара",  emo: 6,  lines: 38,  status: "free" },
+  { id: "tverdomir",    name: "Твердомир",  emo: 9,  lines: 62,  status: "free" },
+  { id: "domovoy",      name: "Домовой",    emo: 7,  lines: 40,  status: "new" },
+  { id: "veligrada",    name: "Велиграда",  emo: 5,  lines: 12,  status: "free" },
+  { id: "velimira",     name: "Велимира",   emo: 6,  lines: 13,  status: "free" },
+  { id: "ratibor",      name: "Ратибор",    emo: 8,  lines: 44,  status: "free" },
+  { id: "achim",        name: "Ачим",       emo: 8,  lines: 36,  status: "free" },
+  { id: "strazhnik",    name: "Стражник",   emo: 7,  lines: 16,  status: "free" },
+  { id: "strazhnitsa",  name: "Стражница",  emo: 6,  lines: 11,  status: "free" },
+  { id: "zhrets",       name: "Жрец",       emo: 8,  lines: 18,  status: "new" }
+];
+
+const STATUS = {
+  free:  { label: "Можно взять",  cls: "chip--ok" },
+  taken: { label: "В работе",     cls: "chip--warn" },
+  done:  { label: "Готово",       cls: "chip--ok" },
+  new:   { label: "Новый дизайн", cls: "chip--moon" }
+};
+
+function plural(n, forms) {
+  const a = Math.abs(n) % 100, b = a % 10;
+  if (a > 10 && a < 20) return forms[2];
+  if (b > 1 && b < 5) return forms[1];
+  if (b === 1) return forms[0];
+  return forms[2];
+}
+
+const board = document.getElementById("board");
+board.innerHTML = HEROES.map(h => {
+  const st = STATUS[h.status] || STATUS.free;
+  const label = h.status === "taken" && h.who ? `${st.label} · ${h.who}` : st.label;
+  return `<article class="hc" data-status="${h.status}">
+    <div class="hc-img"><img src="img/${h.id}.png" alt="${h.name}, портрет из оригинальной игры" loading="lazy"></div>
+    <div class="hc-body">
+      <h3>${h.name}</h3>
+      <p class="hc-meta">${h.emo} ${plural(h.emo, ["эмоция", "эмоции", "эмоций"])} · ${h.lines} ${plural(h.lines, ["реплика", "реплики", "реплик"])}</p>
+      ${h.tag ? `<p class="hc-tag">${h.tag}</p>` : ""}
+      <span class="chip ${st.cls}">${label}</span>
+    </div>
+  </article>`;
+}).join("");
+
+const filters = document.querySelectorAll(".filter");
+filters.forEach(btn => {
+  const f = btn.dataset.filter;
+  const n = f === "all" ? HEROES.length : HEROES.filter(h => h.status === f).length;
+  btn.querySelector("span").textContent = n;
+  if (f !== "all" && n === 0) btn.hidden = true;
+  btn.addEventListener("click", () => {
+    filters.forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+    board.querySelectorAll(".hc").forEach(card => {
+      card.hidden = !(f === "all" || card.dataset.status === f);
+    });
+  });
+});
+
+document.getElementById("contact-label").textContent = CONTACT.label;
+const handleEl = document.getElementById("contact-handle");
+handleEl.textContent = CONTACT.handle;
+document.getElementById("contact-note").textContent = CONTACT.note;
+document.getElementById("contact-link").href = CONTACT.url;
+
+const copyBtn = document.getElementById("copy-btn");
+const copyDone = document.getElementById("copy-done");
+copyBtn.addEventListener("click", () => {
+  const show = () => { copyDone.hidden = false; setTimeout(() => { copyDone.hidden = true; }, 2000); };
+  const selectFallback = () => {
+    const r = document.createRange(); r.selectNodeContents(handleEl);
+    const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  };
+  try {
+    navigator.clipboard.writeText(CONTACT.handle).then(show, selectFallback);
+  } catch (e) { selectFallback(); }
+});
+</script>
+</body>
+</html>
